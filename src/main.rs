@@ -24,6 +24,22 @@ fn panic(_: &core::panic::PanicInfo) -> !{
 // For more information see: <https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/app_image_format.html#application-description>
 esp_bootloader_esp_idf::esp_app_desc!();
 
+#[embassy_executor::task]
+async fn toggle_led(led: Output) {
+    loop {
+        led.toggle();
+        Timer::after(Duration::from_millis(500)).await;
+    }
+}
+
+#[embassy_executor::task]
+async fn alive_signal() {
+    loop {
+        println!("I'm alive, yay");
+        Timer::after(Duration::from_millis(800)).await;
+    }
+}
+
 #[esp_rtos::main]
 async fn main(_spawner: Spawner) -> ! {
     // generator version: 1.0.0
@@ -38,9 +54,5 @@ async fn main(_spawner: Spawner) -> ! {
 
     let mut led = Output::new(peripherals.GPIO4, Level::High, OutputConfig::default());
 
-    loop {
-        led.toggle();
-        Timer::after(Duration::from_millis(500)).await;
-        println!("Hello");
-    }
+    spawner.spawn()
 }
