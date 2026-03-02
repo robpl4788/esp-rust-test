@@ -9,7 +9,7 @@ name = "esp-rust-test-2"
 path = "./src/bin/main.rs"
 
 [dependencies]
-esp-hal = { version = "~1.0", features = ["defmt", "esp32c3", "unstable"] }
+esp-hal = { version = "1.0", features = ["defmt", "esp32c3", "unstable"] }
 
 esp-rtos = { version = "0.2.0", features = [
   "defmt",
@@ -47,7 +47,7 @@ esp-radio = { version = "0.17.0", features = [
   "esp32c3",
   "smoltcp",
   "unstable",
-  "wifi",
+  "esp-now",
 ] }
 smoltcp = { version = "0.12.0", default-features = false, features = [
   "defmt",
@@ -71,6 +71,9 @@ static_cell      = "2.1.1"
 # Rust debug is too slow.
 # For debug builds always builds with some optimization
 opt-level = "s"
+
+[profile.dev.package.esp-radio]
+opt-level = 3
 
 [profile.release]
 codegen-units    = 1     # LLVM can perform better optimizations using a single thread
